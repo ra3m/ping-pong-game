@@ -48,13 +48,19 @@ def control_game():
         logger.info(f"Game started with {game_state['pong_time_ms']}ms wait time")
         return jsonify({"message": "Game started"}), 200
     
-    elif command in ['pause', 'resume']:
+    elif command == 'pause':
         if game_state["ended"]:
-            return jsonify({"message": "please start the game again"}), 400
-        
-        game_state["running"] = (command == 'resume')
-        logger.info(f"Game {command}d")
-        return jsonify({"message": f"Game {command}d"}), 200
+            return jsonify({"message": "Please start the game again"}), 200
+        game_state["running"] = False
+        logger.info("Game paused")
+        return jsonify({"message": "Game paused"}), 200
+    
+    elif command == 'resume':
+        if game_state["ended"]:
+            return jsonify({"message": "Please start the game again"}), 200
+        game_state["running"] = True
+        logger.info("Game resumed")
+        return jsonify({"message": "Game resumed"}), 200
     
     elif command == 'stop':
         game_state["running"] = False
